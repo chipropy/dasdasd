@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SANPE ASTEROIDS - ULTRA</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:,">
+</head>
+<body>
+    <!-- PANTALLA DE CARGA -->
+    <div id="loading-screen">
+        <div class="loading-content">
+            <h2 class="main-title" style="font-size: 3em; color: #00ff88;">SANPE ASTEROIDS</h2>
+            <p style="color: #00ff88; margin: 20px 0; font-size: 1.2em;">Cargando Recursos...</p>
+            <div id="loading-bar-container">
+                <div id="loading-bar"></div>
+            </div>
+            <div id="loading-percentage">0%</div>
+        </div>
+    </div>
+
+    <!-- MENÚ PRINCIPAL -->
+    <div id="main-menu-view">
+        <div class="menu-glow"></div>
+        <h1 class="main-title">ASTEROIDS</h1>
+        <p class="subtitle">SANPE EDITION</p>
+        <div class="menu-buttons">
+            <button id="main-start-button" class="btn-play">► INICIAR JUEGO</button>
+            <button id="edits-button" class="btn-edits">🎬 EDITS (BONUS)</button>
+        </div>
+        <button id="main-settings-button" class="btn-settings">⚙️</button>
+        <div id="main-instructions">
+            <p>🎮 CONTROLES: Flechas/WASD para mover | ESPACIO para disparar | SHIFT para escudo</p>
+            <p>🏆 Destruye asteroides y derrota jefes para avanzar | Recoge power-ups especiales</p>
+        </div>
+    </div>
+
+    <!-- VISTA DE EDITS -->
+    <div id="edits-view">
+        <button id="back-to-main-menu-button" class="btn-back">← VOLVER</button>
+        <h2>🎬 EDITS (BONUS)</h2>
+        <div class="video-grid">
+            <a data-video-src="edits/belli.mp4" class="video-item">Bellingham</a>
+            <a data-video-src="edits/chicomoto.mp4" class="video-item">Chicomoto</a>
+            <a data-video-src="edits/kevin.mp4" class="video-item">Kevin</a>
+            <a data-video-src="edits/messi.mp4" class="video-item">Messi</a>
+            <a data-video-src="edits/ney.mp4" class="video-item">Neymar 1</a>
+            <a data-video-src="edits/ney2.mp4" class="video-item">Neymar 2</a>
+            <a data-video-src="edits/palmer.mp4" class="video-item">Palmer</a>
+            <a data-video-src="edits/ronaldo.mp4" class="video-item">Ronaldo</a>
+            <a data-video-src="edits/vini.mp4" class="video-item">Vinicius</a>
+        </div>
+    </div>
+
+    <!-- REPRODUCTOR DE VIDEO -->
+    <div id="video-player-view">
+        <video id="edit-video-player" controls preload="auto"></video>
+        <button id="back-to-edits-button" class="btn-back">← VOLVER A EDITS</button>
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL DEL JUEGO -->
+    <div id="game-wrapper">
+        <div class="game-header">
+            <div class="header-left">
+                <h1 id="game-title">NIVEL 1</h1>
+                <div id="combo-display" class="combo-display">x1</div>
+            </div>
+            <div id="ui" class="game-ui">
+                <div id="score" class="ui-item score-item">
+                    <span class="ui-icon">⭐</span>
+                    <span id="score-value">0</span>
+                </div>
+                <div id="lives" class="ui-item lives-item">
+                    <span class="ui-icon">❤️</span>
+                    <span id="lives-value">3</span>
+                </div>
+                <div id="level" class="ui-item level-item">
+                    <span class="ui-icon">🎯</span>
+                    <span id="level-value">1</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="game-container">
+            <canvas id="gameCanvas" width="1200" height="700"></canvas>
+            <div id="particle-layer"></div>
+            <div id="vfx-layer"></div>
+            <div id="screen-shake"></div>
+            <video id="transitionVideo" preload="auto" src="madeline/transicion.mp4"></video>
+        </div>
+
+        <div id="ability-status">
+            <div id="ability-icon-container">
+                <img id="ability-icon" src="" alt="Habilidad">
+            </div>
+            <div id="cooldown-bar-container">
+                <div id="cooldown-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTROLES TÁCTILES -->
+    <div id="touch-controls">
+        <div id="dpad">
+            <button class="dpad-button" id="dpad-up">▲</button>
+            <button class="dpad-button" id="dpad-left">◀</button>
+            <button class="dpad-button" id="dpad-right">▶</button>
+        </div>
+        <div id="action-buttons">
+            <button id="parry-button">ESCUDO</button>
+            <button id="shoot-button">DISPARO</button>
+        </div>
+    </div>
+
+    <!-- AUDIO -->
+    <audio id="bgMusic" src="music.mp3" preload="auto" loop></audio>
+    <audio id="shotSound" src="shot.mp3" preload="auto"></audio>
+    <audio id="killSound" src="kill.mp3" preload="auto"></audio>
+    <audio id="newStageSound" src="newstage.mp3" preload="auto"></audio>
+    <audio id="momoSound1" src="momo1.mp3" preload="auto"></audio>
+    <audio id="momoSound2" src="momo2.mp3" preload="auto"></audio>
+    <audio id="bossMusic" src="bmu.mp3" preload="auto" loop></audio>
+    <audio id="kapumSound" src="kapum.mp3" preload="auto"></audio>
+    <audio id="zomSound" src="zom.mp3" preload="auto"></audio>
+    <audio id="madelineMusic" src="madeline/segundaparte.mp3" preload="auto" loop></audio>
+    <audio id="cobraSound1" src="madeline/boe.mp3" preload="auto"></audio>
+    <audio id="cobraSound2" src="madeline/acabado.mp3" preload="auto"></audio>
+    <audio id="cobraSound3" src="madeline/critica.mp3" preload="auto"></audio>
+    <audio id="grenadeSound" src="madeline/river.mp3" preload="auto"></audio>
+    <audio id="cajaAbiertaSound" src="cajaabierta.mp3" preload="auto"></audio>
+    <audio id="congeladoSound" src="congelado.mp3" preload="auto"></audio>
+    <audio id="deadeyeSound" src="deadeye.mp3" preload="auto"></audio>
+
+    <!-- BOTONES DE PAUSA Y CONFIGURACIÓN -->
+    <button id="pause-button" title="Pausa">⏸️</button>
+
+    <!-- MODAL DE CONFIGURACIÓN -->
+    <div id="settings-modal">
+        <div class="settings-content">
+            <h2 id="settings-title">⚙️ AJUSTES</h2>
+            <div class="slider-container">
+                <label for="music-volume-slider">🎵 Música:</label>
+                <input type="range" id="music-volume-slider" min="0" max="100" value="70">
+                <span id="music-volume-label">70</span>
+            </div>
+            <div class="slider-container">
+                <label for="sfx-volume-slider">🔊 Efectos:</label>
+                <input type="range" id="sfx-volume-slider" min="0" max="100" value="50">
+                <span id="sfx-volume-label">50</span>
+            </div>
+            <button id="close-settings-button" class="btn-close">CERRAR</button>
+        </div>
+    </div>
+
+    <!-- MENÚ DE DESARROLLADOR -->
+    <div id="dev-menu">
+        <div class="dev-content">
+            <h2>👨‍💻 MENÚ DESARROLLADOR</h2>
+            <div class="dev-section">
+                <h3>Estado del Jugador</h3>
+                <div class="dev-controls">
+                    <div class="dev-input-group">
+                        <input type="checkbox" id="dev-godmode">
+                        <label for="dev-godmode">Modo Dios</label>
+                    </div>
+                    <div class="dev-input-group">
+                        <label for="dev-set-lives">Vidas:</label>
+                        <input type="number" id="dev-set-lives" value="3" min="0">
+                        <button id="dev-apply-lives">✓</button>
+                    </div>
+                    <div class="dev-input-group">
+                        <label for="dev-set-score">Puntaje:</label>
+                        <input type="number" id="dev-set-score" value="0" min="0">
+                        <button id="dev-apply-score">✓</button>
+                    </div>
+                </div>
+            </div>
+            <div class="dev-section">
+                <h3>Invocaciones</h3>
+                <div class="dev-controls">
+                    <button id="dev-spawn-momo-1">Jefe MOMO (Nv.1)</button>
+                    <button id="dev-spawn-momo-2">Jefe MOMO (Nv.2)</button>
+                    <button id="dev-spawn-cobra">Jefe COBRA</button>
+                    <button id="dev-spawn-zom">Zom Enemigo</button>
+                    <button id="dev-clear-enemies">Limpiar Enemigos</button>
+                </div>
+            </div>
+            <div class="dev-section">
+                <h3>Progresión</h3>
+                <div class="dev-controls">
+                    <button id="dev-next-level">Siguiente Nivel</button>
+                    <button id="dev-start-madeline">Fase Madeline</button>
+                    <button id="dev-complete-cycle">Completar Ciclo</button>
+                </div>
+            </div>
+            <div class="dev-section">
+                <h3>Acciones</h3>
+                <div class="dev-controls">
+                    <button id="dev-game-over">Game Over</button>
+                    <button id="dev-hit-player">Dañar Jugador</button>
+                    <button id="dev-spawn-powerup">Power-up Aleatorio</button>
+                </div>
+            </div>
+            <button id="close-dev-menu" class="btn-close-dev">CERRAR (K)</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
